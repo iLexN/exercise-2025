@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  nest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: local
+    command: npm run start:dev
+    volumes:
+      - .:/usr/src/app

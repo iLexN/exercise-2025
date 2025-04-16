@@ -23,7 +23,8 @@ export class UsersController {
 
   @Get()
   findAll(@Query('age') age: number, @Query('name') name: string) {
-    console.log(age, name);
+    console.log(age);
+    console.log(name);
     return this.usersService.findAll();
   }
 
