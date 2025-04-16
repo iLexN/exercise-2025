@@ -9,6 +9,8 @@ services:
       - '3000:3000'
     environment:
       NODE_ENV: local
+      DATABASE_USER: test
+      DATABASE_PASSWORD: test
     command: npm run start:dev
     volumes:
       - .:/usr/src/app
