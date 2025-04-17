@@ -11,6 +11,24 @@ services:
       NODE_ENV: local
       DATABASE_USER: test
       DATABASE_PASSWORD: test
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
     command: npm run start:dev
     volumes:
       - .:/usr/src/app
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
