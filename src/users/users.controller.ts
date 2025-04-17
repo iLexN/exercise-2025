@@ -7,32 +7,38 @@ import {
   Param,
   Delete,
   Query,
+  Logger,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ResponseCode } from '../utility/response.message.code';
+import { FindAllUserDto } from './dto/find-all-user';
 
 @Controller('users')
 export class UsersController {
+  private readonly logger = new Logger(UsersController.name);
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    const message = this.usersService.create(createUserDto);
+    return {
+      success: true,
+      message,
+      code: ResponseCode.SUCCESS,
+    };
   }
 
   @Get()
-  findAll(@Query('age') age: number, @Query('name') name: string) {
-    console.log(age);
-    console.log(name);
+  findAll(@Query() findAllUserDto: FindAllUserDto) {
+    this.logger.log('findAll', findAllUserDto);
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    // id is string, +id is number
-    // the `+` is type conversion
-    return this.usersService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')

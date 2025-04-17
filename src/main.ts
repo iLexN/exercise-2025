@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConsoleLogger } from '@nestjs/common';
+import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const snapshotFlag = process.env.app_snapshot === 'true';
@@ -12,6 +12,14 @@ async function bootstrap() {
       json: true,
     }),
   });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
+
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
