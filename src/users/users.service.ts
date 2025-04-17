@@ -1,21 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ConfigService } from '@nestjs/config';
-import { DatabaseCredentials } from './database-credentials.interface';
+import { UsersConfig } from './users.config';
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
-  private db: DatabaseCredentials;
 
-  constructor(private configService: ConfigService) {
-    this.db = {
-      DATABASE_USER: this.configService.get<string>('DATABASE_USER') || '',
-      DATABASE_PASSWORD:
-        this.configService.get<string>('DATABASE_PASSWORD') || '',
-    };
-  }
+  constructor(private usersConfig: UsersConfig) {}
   create(createUserDto: CreateUserDto) {
     console.log(createUserDto);
     return 'This action adds a new user';
@@ -23,7 +15,7 @@ export class UsersService {
 
   findAll() {
     this.logger.log('findAll');
-    this.logger.log('db', this.db);
+    this.logger.log('db', this.usersConfig.db.DATABASE_USER);
     return `This action returns all users`;
   }
 
@@ -37,6 +29,7 @@ export class UsersService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
+    console.log(updateUserDto);
     return `This action updates a #${id} user`;
   }
 
