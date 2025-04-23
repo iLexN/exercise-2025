@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { MiddlewaresModule } from './middlewares/middlewares.module';
 import { UtilityModule } from './utility/utility.module';
 import { DatabaseModule } from './database/database.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RedisOptions } from './redis.options';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { DatabaseModule } from './database/database.module';
     MiddlewaresModule,
     UtilityModule,
     DatabaseModule,
+    CacheModule.registerAsync(RedisOptions),
   ],
   controllers: [AppController],
   providers: [AppService],

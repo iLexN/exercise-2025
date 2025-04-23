@@ -17,8 +17,18 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const user = this.usersRepository.create(createUserDto); // Create a new user instance
-    await this.usersRepository.save(user); // Save the user to the database
+    // method #1
+    // const user = this.usersRepository.create(createUserDto); // Create a new user instance
+    // await this.usersRepository.save(user); // Save the user to the database
+
+    // method #2
+    const user = new User();
+    user.firstName = createUserDto.firstName;
+    user.lastName = createUserDto.lastName;
+    user.age = createUserDto.age;
+    user.roles = createUserDto.roles;
+    await this.usersRepository.save(user);
+
     return user;
   }
 
