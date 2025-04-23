@@ -47,6 +47,11 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id: id });
   }
 
+  findByName(name: string) {
+    this.logger.log(`this is findByName`, { name: name });
+    return this.usersRepository.findOneBy({ firstName: name });
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     console.log(updateUserDto);
     return `This action updates a #${id} user`;

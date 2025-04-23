@@ -8,6 +8,7 @@ import { UtilityModule } from './utility/utility.module';
 import { DatabaseModule } from './database/database.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisOptions } from './redis.options';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RedisOptions } from './redis.options';
     UtilityModule,
     DatabaseModule,
     CacheModule.registerAsync(RedisOptions),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -11,14 +11,16 @@ import {
   HttpException,
   HttpStatus,
   Inject,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResponseCode } from '../utility/response.message.code';
 import { FindAllUserDto } from './dto/find-all-user.dto';
-import { CACHE_MANAGER, CacheKey, CacheTTL } from '@nestjs/cache-manager';
+import { CACHE_MANAGER, CacheTTL } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -28,6 +30,7 @@ export class UsersController {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
