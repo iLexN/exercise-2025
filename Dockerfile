@@ -1,6 +1,9 @@
 # Use the official Node.js image as the base image
 FROM node:23
 
+RUN useradd -m appuser
+USER appuser
+
 # Set the working directory
 WORKDIR /usr/src/app
 
