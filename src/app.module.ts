@@ -9,6 +9,7 @@ import { DatabaseModule } from './database/database.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisOptions } from './redis.options';
 import { AuthModule } from './auth/auth.module';
+import { VertupayModule } from './vertupay/vertupay.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
     DatabaseModule,
     CacheModule.registerAsync(RedisOptions),
     AuthModule,
+    VertupayModule,
   ],
   controllers: [AppController],
   providers: [AppService],

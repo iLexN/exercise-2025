@@ -13,6 +13,9 @@ services:
       MYSQL_DATABASE: my_database
       MYSQL_USER: test
       MYSQL_PASSWORD: test
+      VERTUPAY_P2P_PASS: C2D7EC7EB8
+      VERTUPAY_QRIS_PASS: 3A47291B32
+      VERTUPAY_VA_PASS: 58197AE3B4
     command: npm run start:dev
     volumes:
       - .:/usr/src/app
