@@ -1,4 +1,4 @@
-export class VertupayAccount {
+export class VertupayAccountDto {
   constructor(
     public readonly merchantId: string,
     public readonly passKey: string,

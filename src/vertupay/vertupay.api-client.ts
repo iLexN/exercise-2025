@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { VertupayAccount } from './struct/vertupay.account';
+import { VertupayAccountDto } from './struct/vertupay.account.dto';
 import { createHash } from 'crypto';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { VertupayEndpoints } from './struct/vertupay.endpoints';
 import { VertupayApiError } from './VertupayApiError';
-import {
-  VertupayBalanceResponse,
-  VertupayFundInOut,
-} from './struct/vertupay.balance-response';
+import { VertupayBalanceResponse } from './struct/vertupay.balance-response';
 import { AxiosError } from 'axios';
+import { VertupayAccountBalanceDto } from './struct/vertupay.account-balance.dto';
 
 @Injectable()
 export class VertupayApiClient {
   constructor(private readonly httpService: HttpService) {}
 
-  async getBalance(account: VertupayAccount): Promise<VertupayBalanceResponse> {
+  async getBalance(
+    account: VertupayAccountDto,
+  ): Promise<VertupayAccountBalanceDto> {
     console.log(account);
     const signature: string = this.hashSignature(account.getSignatureString());
     console.log(signature);
@@ -44,16 +44,7 @@ export class VertupayApiClient {
       // cannot use response.isSuccess().
       console.log(response);
       // return response;
-
-      // so need create class.
-      return new VertupayBalanceResponse(
-        new VertupayFundInOut(
-          response.Content.BalanceFundIn,
-          response.Content.BalanceFundOut,
-        ),
-        response.ResultCode,
-        response.ErrorMessage,
-      );
+      return VertupayAccountBalanceDto.createFromApiResponse(response);
     } catch (error) {
       const axiosError = error as AxiosError;
       const status: number = axiosError.status ?? 500;

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { VertupayAccount } from './struct/vertupay.account';
+import { VertupayAccountDto } from './struct/vertupay.account.dto';
 
 @Injectable()
 export class VertupayAccountFactory {
   constructor(private configService: ConfigService) {}
 
-  createAccounts(): VertupayAccount[] {
+  createAccounts(): VertupayAccountDto[] {
     const accounts = [];
     const accountConfigs = [
       { id: '4D9C07532E', passKey: 'VERTUPAY_P2P_PASS' },
@@ -15,7 +15,7 @@ export class VertupayAccountFactory {
     ];
 
     for (const { id, passKey } of accountConfigs) {
-      const account = new VertupayAccount(
+      const account = new VertupayAccountDto(
         id,
         this.configService.get<string>(passKey, ''),
       );

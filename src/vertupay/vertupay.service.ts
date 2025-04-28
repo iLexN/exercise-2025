@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { VertupayAccountFactory } from './vertupay.account-factory';
-import { VertupayAccount } from './struct/vertupay.account';
-import { VertupayBalanceResponse } from './struct/vertupay.balance-response';
+import { VertupayAccountDto } from './struct/vertupay.account.dto';
 import { VertupayApiClient } from './vertupay.api-client';
+import { VertupayAccountBalanceDto } from './struct/vertupay.account-balance.dto';
 
 @Injectable()
 export class VertupayService {
@@ -11,11 +11,13 @@ export class VertupayService {
     private readonly vertupayApiClient: VertupayApiClient,
   ) {}
 
-  getAccounts(): VertupayAccount[] {
+  getAccounts(): VertupayAccountDto[] {
     return this.vertupayAccountFactory.createAccounts();
   }
 
-  async getBalance(account: VertupayAccount): Promise<VertupayBalanceResponse> {
+  async getBalance(
+    account: VertupayAccountDto,
+  ): Promise<VertupayAccountBalanceDto> {
     return await this.vertupayApiClient.getBalance(account);
   }
 }
