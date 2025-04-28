@@ -3,6 +3,7 @@ import { VertupayAccountFactory } from './vertupay.account-factory';
 import { VertupayAccountDto } from './struct/vertupay.account.dto';
 import { VertupayApiClient } from './vertupay.api-client';
 import { VertupayAccountBalanceDto } from './struct/vertupay.account-balance.dto';
+import { ApiListRow } from './struct/vertupay.pay.dto';
 
 @Injectable()
 export class VertupayService {
@@ -19,5 +20,13 @@ export class VertupayService {
     account: VertupayAccountDto,
   ): Promise<VertupayAccountBalanceDto> {
     return await this.vertupayApiClient.getBalance(account);
+  }
+
+  async getPayoutList(
+    account: VertupayAccountDto,
+    start: Date,
+    end: Date,
+  ): Promise<ApiListRow[]> {
+    return await this.vertupayApiClient.getPayoutList(account, start, end);
   }
 }
