@@ -86,6 +86,8 @@ export class VertupayApiClient {
       );
 
       const { Content: body } = response;
+
+      // can using map ... see below
       // for (const data of body.Data) {
       //   list.push(
       //     ApiListRow.createFromApiResponse(data, VertupayPaymentType.Withdraw),
@@ -94,6 +96,7 @@ export class VertupayApiClient {
 
       console.log(body);
 
+      // using map
       const apiRows: ApiListRow[] = body.Data.map(
         (data: ListRow): ApiListRow =>
           ApiListRow.createFromApiResponse(data, PaymentType.Withdraw),

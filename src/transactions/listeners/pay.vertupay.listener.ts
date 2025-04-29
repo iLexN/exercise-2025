@@ -10,32 +10,58 @@ import { Transactions } from '../entities/transactions.entity';
 export class PayVertupayListener {
   constructor(private readonly transactionsService: TransactionsService) {}
   @OnEvent(VertupayListEvents.Update)
-  async handleVertupayUpdatedEvent(event: VertupayPayUpdatedEvent) {
+  @OnEvent(VertupayListEvents.Update)
+  async handleVertupayUpdatedEvent(
+    event: VertupayPayUpdatedEvent,
+  ): Promise<void> {
     const vertupay = event.pay;
 
-    const dbRow = await this.transactionsService.findOneByPaymentId(
-      vertupay.transaction_id,
-    );
-    if (!dbRow) {
+    let dbRow;
+
+    try {
+      dbRow = await this.transactionsService.findOneByPaymentId(
+        vertupay.transaction_id,
+      );
+    } catch (findError) {
+      console.error('Error finding transaction by payment ID:', findError);
       return;
     }
 
-    const newTransaction =
+    if (!dbRow) {
+      console.warn(
+        `Transaction with ID ${vertupay.transaction_id} not found for update.`,
+      );
+      return;
+    }
+
+    const updatedTransaction =
       this.transactionsService.convertFromVertupayToTransaction(
         dbRow,
         vertupay,
       );
-    await this.transactionsService.save(newTransaction);
+
+    try {
+      await this.transactionsService.save(updatedTransaction);
+      console.log(`Transaction updated for ID: ${vertupay.transaction_id}`);
+    } catch (saveError) {
+      console.error('Error saving updated transaction:', saveError);
+    }
   }
 
   @OnEvent(VertupayListEvents.Create)
-  async handleVertupayCreatedEvent(event: VertupayPayCreatedEvent) {
-    const transaction =
-      this.transactionsService.convertFromVertupayToTransaction(
-        new Transactions(),
-        event.pay,
-      );
-
-    await this.transactionsService.create(transaction);
+  async handleVertupayCreatedEvent(
+    event: VertupayPayCreatedEvent,
+  ): Promise<void> {
+    try {
+      const newTransaction =
+        this.transactionsService.convertFromVertupayToTransaction(
+          new Transactions(),
+          event.pay,
+        );
+      await this.transactionsService.create(newTransaction);
+      console.log(`Transaction created for ID: ${event.pay.transaction_id}`);
+    } catch (error) {
+      console.error('Error handling Vertupay create event:', error);
+    }
   }
 }

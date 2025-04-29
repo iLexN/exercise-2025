@@ -41,7 +41,7 @@ export class VertupayService {
     return await this.vertupayApiClient.getPayoutList(account, start, end);
   }
 
-  async upsertPaylist(list: ApiListRow[]) {
+  async upsertPaylist(list: ApiListRow[]): Promise<void> {
     // Extract transaction IDs from the input list
     const transactionIds = list.map((row: ApiListRow) => row.transactionID);
 
