@@ -1,5 +1,5 @@
 import { ListRow } from './vertypay.list-response';
-import { VertupayPaymentType } from './vertupay.payment-type';
+import { PaymentType } from '../../transactions/payment.type';
 
 export class ApiListRow {
   constructor(
@@ -10,13 +10,13 @@ export class ApiListRow {
     public readonly amount: number,
     public readonly dateRequest: string,
     public readonly transactionStatus: string,
-    public readonly paymentType: VertupayPaymentType,
+    public readonly paymentType: PaymentType,
     public readonly accountName: string,
   ) {}
 
   static createFromApiResponse(
     data: ListRow,
-    paymentType: VertupayPaymentType,
+    paymentType: PaymentType,
   ): ApiListRow {
     return new ApiListRow(
       data.MerchantTransactionID,

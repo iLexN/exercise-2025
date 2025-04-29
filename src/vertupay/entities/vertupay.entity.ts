@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiListRow } from '../struct/vertupay.pay.dto';
-import { VertupayPaymentType } from '../struct/vertupay.payment-type';
+import { PaymentType } from '../../transactions/payment.type';
 
 @Entity()
 export class Vertupay {
@@ -23,9 +23,13 @@ export class Vertupay {
   @Column()
   transaction_status: string;
   @Column()
-  payment_type: VertupayPaymentType;
+  payment_type: PaymentType;
   @Column()
   account_name: string;
+
+  ping(): string {
+    return 'pong';
+  }
 
   updateFromApiListRow(apiListRow: ApiListRow) {
     this.merchant_transaction_id = apiListRow.merchantTransactionID;

@@ -7,7 +7,11 @@ import { ApiListRow } from './struct/vertupay.pay.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Vertupay } from './entities/vertupay.entity';
-import { In } from 'typeorm'; // Ensure you import In if using TypeORM
+import { In } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { VertupayListEvents } from './events/vertupay.events';
+import { VertupayPayUpdatedEvent } from './events/vertupay.pay-updated.event';
+import { VertupayPayCreatedEvent } from './events/vertupay.pay-created.event'; // Ensure you import In if using TypeORM
 
 @Injectable()
 export class VertupayService {
@@ -16,6 +20,7 @@ export class VertupayService {
     private readonly vertupayApiClient: VertupayApiClient,
     @InjectRepository(Vertupay)
     private vertupayRepository: Repository<Vertupay>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   getAccounts(): VertupayAccountDto[] {
@@ -74,11 +79,23 @@ export class VertupayService {
     if (toUpdate.length > 0) {
       console.log(`-------------- toUpdate: ${toUpdate.length}`);
       await this.vertupayRepository.save(toUpdate);
+      toUpdate.forEach((row: Vertupay) =>
+        this.eventEmitter.emit(
+          VertupayListEvents.Update,
+          new VertupayPayUpdatedEvent(row),
+        ),
+      );
     }
 
     if (toInsert.length > 0) {
       console.log(`-------------- toInsert: ${toInsert.length}`);
       await this.vertupayRepository.insert(toInsert);
+      toInsert.forEach((row: Vertupay) =>
+        this.eventEmitter.emit(
+          VertupayListEvents.Create,
+          new VertupayPayCreatedEvent(row),
+        ),
+      );
     }
     // insert() can batch vs save() is one by one
     // await this.vertupayRepository.insert(rows);

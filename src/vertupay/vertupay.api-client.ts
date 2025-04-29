@@ -10,7 +10,7 @@ import { AxiosError } from 'axios';
 import { VertupayAccountBalanceDto } from './struct/vertupay.account-balance.dto';
 import { ApiListRow } from './struct/vertupay.pay.dto';
 import { ListRow, VertupayListResponse } from './struct/vertypay.list-response';
-import { VertupayPaymentType } from './struct/vertupay.payment-type';
+import { PaymentType } from '../transactions/payment.type';
 
 @Injectable()
 export class VertupayApiClient {
@@ -96,7 +96,7 @@ export class VertupayApiClient {
 
       const apiRows: ApiListRow[] = body.Data.map(
         (data: ListRow): ApiListRow =>
-          ApiListRow.createFromApiResponse(data, VertupayPaymentType.Withdraw),
+          ApiListRow.createFromApiResponse(data, PaymentType.Withdraw),
       );
       list.push(...apiRows);
 
