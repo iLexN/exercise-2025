@@ -42,7 +42,7 @@ export class VertupayController {
   async getPayoutList() {
     const accounts: VertupayAccountDto[] = this.vertupayService.getAccounts();
     const end = new Date();
-    const start = new Date(end.getTime() - 26 * 60 * 60 * 1000);
+    const start = new Date(end.getTime() - 2 * 24 * 60 * 60 * 1000);
     let payoutList: ApiListRow[];
     try {
       payoutList = await this.vertupayService.getPayoutList(

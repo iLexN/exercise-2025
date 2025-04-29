@@ -39,7 +39,7 @@ export class PayVertupayListener {
         dbRow,
         vertupay,
       );
-
+    console.log(updatedTransaction.ping());
     try {
       await this.transactionsService.save(updatedTransaction);
       console.log(`Transaction updated for ID: ${vertupay.transaction_id}`);

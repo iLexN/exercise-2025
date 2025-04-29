@@ -52,16 +52,13 @@ export class TransactionsService {
     const date = new Date(formattedDateString);
     console.log(date);
 
-    // Assign values to the transaction object
-    Object.assign(transactions, {
-      payment_id: vertupay.transaction_id,
-      status: status,
-      amount: vertupay.amount,
-      transaction_at: date,
-      currency: vertupay.currency,
-      payment_type: vertupay.payment_type,
-      order_no: vertupay.merchant_transaction_id,
-    });
+    transactions.payment_id = vertupay.transaction_id;
+    transactions.status = status;
+    transactions.amount = vertupay.amount;
+    transactions.transaction_at = date;
+    transactions.currency = vertupay.currency;
+    transactions.payment_type = vertupay.payment_type;
+    transactions.order_no = vertupay.merchant_transaction_id;
 
     return transactions;
   }
