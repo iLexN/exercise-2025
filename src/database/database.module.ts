@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import * as process from 'node:process';
+import { Vertupay } from '../vertupay/entities/vertupay.entity';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import * as process from 'node:process';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      entities: [User],
+      entities: [User, Vertupay],
       synchronize: process.env.NODE_ENV === 'local', // set to false in production
       logging: true,
     }),

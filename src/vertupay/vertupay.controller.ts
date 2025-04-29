@@ -49,6 +49,7 @@ export class VertupayController {
         start,
         end,
       );
+      await this.vertupayService.createManyPay(payoutList);
       console.log(payoutList[0] instanceof ApiListRow);
       return {
         success: true,

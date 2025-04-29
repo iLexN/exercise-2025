@@ -10,7 +10,7 @@ export class ApiListRow {
     public readonly amount: number,
     public readonly dateRequest: string,
     public readonly transactionStatus: string,
-    public readonly paymentType: string,
+    public readonly paymentType: VertupayPaymentType,
     public readonly accountName: string,
   ) {}
 

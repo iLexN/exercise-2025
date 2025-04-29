@@ -5,9 +5,11 @@ import { ConfigModule } from '@nestjs/config';
 import { VertupayController } from './vertupay.controller';
 import { VertupayApiClient } from './vertupay.api-client';
 import { HttpModule } from '@nestjs/axios';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Vertupay } from './entities/vertupay.entity';
 
 @Module({
-  imports: [ConfigModule, HttpModule],
+  imports: [ConfigModule, HttpModule, TypeOrmModule.forFeature([Vertupay])],
   providers: [VertupayService, VertupayAccountFactory, VertupayApiClient],
   controllers: [VertupayController],
 })

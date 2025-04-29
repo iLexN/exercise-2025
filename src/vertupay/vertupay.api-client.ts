@@ -91,6 +91,9 @@ export class VertupayApiClient {
       //     ApiListRow.createFromApiResponse(data, VertupayPaymentType.Withdraw),
       //   );
       // }
+
+      console.log(body);
+
       const apiRows: ApiListRow[] = body.Data.map(
         (data: ListRow): ApiListRow =>
           ApiListRow.createFromApiResponse(data, VertupayPaymentType.Withdraw),
