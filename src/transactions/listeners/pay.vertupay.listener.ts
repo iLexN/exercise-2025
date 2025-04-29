@@ -9,7 +9,7 @@ import { Transactions } from '../entities/transactions.entity';
 @Injectable()
 export class PayVertupayListener {
   constructor(private readonly transactionsService: TransactionsService) {}
-  @OnEvent(VertupayListEvents.Update)
+
   @OnEvent(VertupayListEvents.Update)
   async handleVertupayUpdatedEvent(
     event: VertupayPayUpdatedEvent,
@@ -30,6 +30,9 @@ export class PayVertupayListener {
     if (!dbRow) {
       console.warn(
         `Transaction with ID ${vertupay.transaction_id} not found for update.`,
+      );
+      await this.handleVertupayCreatedEvent(
+        new VertupayPayUpdatedEvent(vertupay),
       );
       return;
     }
