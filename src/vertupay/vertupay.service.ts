@@ -36,43 +36,48 @@ export class VertupayService {
     return await this.vertupayApiClient.getPayoutList(account, start, end);
   }
 
-  async createManyPay(list: ApiListRow[]) {
-    // find all row from the db where from apiListRow.transactionID
+  async upsertPaylist(list: ApiListRow[]) {
+    // Extract transaction IDs from the input list
     const transactionIds = list.map((row: ApiListRow) => row.transactionID);
+
+    // Fetch existing rows from the database
     const dbRows = await this.vertupayRepository.find({
       where: {
         transaction_id: In(transactionIds),
       },
     });
+
+    // Create a map for quick lookup of existing rows
     const existingRowsMap = new Map(
-      dbRows.map((row: Vertupay): [string, Vertupay] => [
-        row.transaction_id,
-        row,
-      ]),
+      dbRows.map((row: Vertupay) => [row.transaction_id, row]),
     );
+
     // Prepare arrays for updates and inserts
     const toUpdate: Vertupay[] = [];
     const toInsert: Vertupay[] = [];
 
     for (const item of list) {
       if (existingRowsMap.has(item.transactionID)) {
-        // update case
+        // Update case
         const dbRow = existingRowsMap.get(item.transactionID);
-        if (dbRow !== undefined) {
-          dbRow?.updateFromApiListRow(item);
+        if (dbRow) {
+          dbRow.updateFromApiListRow(item); // Update fields
           toUpdate.push(dbRow);
         }
       } else {
+        // Insert case
         toInsert.push(Vertupay.fromApiListRow(item));
       }
     }
 
+    // Perform batch updates and inserts
     if (toUpdate.length > 0) {
-      console.log(`-------------- toupdate: ${toUpdate.length}`);
+      console.log(`-------------- toUpdate: ${toUpdate.length}`);
       await this.vertupayRepository.save(toUpdate);
     }
+
     if (toInsert.length > 0) {
-      console.log(`-------------- toinsert: ${toInsert.length}`);
+      console.log(`-------------- toInsert: ${toInsert.length}`);
       await this.vertupayRepository.insert(toInsert);
     }
     // insert() can batch vs save() is one by one

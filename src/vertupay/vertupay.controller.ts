@@ -43,14 +43,27 @@ export class VertupayController {
     const accounts: VertupayAccountDto[] = this.vertupayService.getAccounts();
     const end = new Date();
     const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
+    let payoutList: ApiListRow[];
     try {
-      const payoutList: ApiListRow[] = await this.vertupayService.getPayoutList(
+      payoutList = await this.vertupayService.getPayoutList(
         accounts[0],
         start,
         end,
       );
-      await this.vertupayService.createManyPay(payoutList);
-      console.log(payoutList[0] instanceof ApiListRow);
+    } catch (error) {
+      const customError = error as VertupayApiError;
+      throw new HttpException(
+        {
+          success: false,
+          message: customError.message,
+          code: ResponseCode.ERROR,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    try {
+      await this.vertupayService.upsertPaylist(payoutList);
       return {
         success: true,
         message: `Payout List successful.`,
@@ -58,11 +71,11 @@ export class VertupayController {
         code: ResponseCode.SUCCESS,
       };
     } catch (error) {
-      const customError = error as VertupayApiError;
+      console.log(error);
       throw new HttpException(
         {
           success: false,
-          message: customError.message,
+          message: 'db error',
           code: ResponseCode.ERROR,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
