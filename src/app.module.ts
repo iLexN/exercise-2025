@@ -12,18 +12,20 @@ import { AuthModule } from './auth/auth.module';
 import { VertupayModule } from './vertupay/vertupay.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TransactionsModule } from './transactions/transactions.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
-    UsersModule,
     ConfigModule.forRoot(),
+    CacheModule.registerAsync(RedisOptions),
+    EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
     MiddlewaresModule,
     UtilityModule,
     DatabaseModule,
-    CacheModule.registerAsync(RedisOptions),
+    UsersModule,
     AuthModule,
     VertupayModule,
-    EventEmitterModule.forRoot(),
     TransactionsModule,
   ],
   controllers: [AppController],

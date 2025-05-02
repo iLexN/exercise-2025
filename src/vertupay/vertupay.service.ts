@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { VertupayAccountFactory } from './vertupay.account-factory';
 import { VertupayAccountDto } from './struct/vertupay.account.dto';
 import { VertupayApiClient } from './vertupay.api-client';
@@ -11,10 +11,13 @@ import { In } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { VertupayListEvents } from './events/vertupay.events';
 import { VertupayPayUpdatedEvent } from './events/vertupay.pay-updated.event';
-import { VertupayPayCreatedEvent } from './events/vertupay.pay-created.event'; // Ensure you import In if using TypeORM
+import { VertupayPayCreatedEvent } from './events/vertupay.pay-created.event';
+//import { Cron, CronExpression } from '@nestjs/schedule'; // Ensure you import In if using TypeORM
 
 @Injectable()
 export class VertupayService {
+  private readonly logger = new Logger(VertupayService.name);
+
   constructor(
     private readonly vertupayAccountFactory: VertupayAccountFactory,
     private readonly vertupayApiClient: VertupayApiClient,
@@ -99,5 +102,17 @@ export class VertupayService {
     }
     // insert() can batch vs save() is one by one
     // await this.vertupayRepository.insert(rows);
+  }
+
+  // @Cron(CronExpression.EVERY_10_MINUTES)
+  async handleCron() {
+    this.logger.debug('Called when the current second is 45');
+
+    const accounts: VertupayAccountDto[] = this.getAccounts();
+    const end = new Date();
+    const start = new Date(end.getTime() - 2 * 24 * 60 * 60 * 1000);
+
+    const payoutList = await this.getPayoutList(accounts[0], start, end);
+    await this.upsertPaylist(payoutList);
   }
 }
