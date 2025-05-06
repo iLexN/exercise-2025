@@ -4,12 +4,16 @@ import { Repository } from 'typeorm';
 import { Transactions } from './entities/transactions.entity';
 import { Vertupay } from '../vertupay/entities/vertupay.entity';
 import { PaymentStatus } from './payment.type';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectRepository(Transactions)
     private transactionsRepository: Repository<Transactions>,
+    @InjectQueue('transaction')
+    private transactionQueue: Queue,
   ) {}
 
   async findOneByPaymentId(id: string): Promise<Transactions | null> {
@@ -61,5 +65,10 @@ export class TransactionsService {
     transactions.order_no = vertupay.merchant_transaction_id;
 
     return transactions;
+  }
+
+  async addToQueueFromVertupay(vertupay: Vertupay): Promise<void> {
+    console.log('here is add to transactionQueue for vertupay');
+    await this.transactionQueue.add('fromVertupay', vertupay);
   }
 }

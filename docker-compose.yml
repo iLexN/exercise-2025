@@ -36,16 +36,16 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
-#  redis:
-#    image: redis:alpine
   redis:
-    image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
-    ulimits:
-      memlock: -1
-      # For better performance, consider `host` mode instead `port` to avoid docker NAT.
-      # `host` mode is NOT currently supported in Swarm Mode.
-      # https://docs.docker.com/compose/compose-file/compose-file-v3/#network_mode
-      # network_mode: "host"
+    image: redis:alpine
+#  redis:
+#    image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+#    ulimits:
+#      memlock: -1
+#      # For better performance, consider `host` mode instead `port` to avoid docker NAT.
+#      # `host` mode is NOT currently supported in Swarm Mode.
+#      # https://docs.docker.com/compose/compose-file/compose-file-v3/#network_mode
+#      # network_mode: "host"
 
 #  redis-commander:
 #    image: rediscommander/redis-commander:latest

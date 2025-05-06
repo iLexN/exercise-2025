@@ -13,6 +13,7 @@ import { VertupayModule } from './vertupay/vertupay.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TransactionsModule } from './transactions/transactions.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -20,6 +21,13 @@ import { ScheduleModule } from '@nestjs/schedule';
     CacheModule.registerAsync(RedisOptions),
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
+    BullModule.forRoot({
+      connection: {
+        host: 'redis',
+        port: 6379,
+      },
+      prefix: 'job',
+    }),
     MiddlewaresModule,
     UtilityModule,
     DatabaseModule,
