@@ -1,0 +1,81 @@
+<script type="text/javascript">
+    // const eventSource = new EventSource('http://localhost:3000/sse?s=AAPL,GOOGL,AMZN', { withCredentials: false });
+    const eventSource = new EventSource('http://localhost:8080/sse?s=AAPL,GOOGL,AMZN', { withCredentials: false });
+
+    eventSource.onmessage = ({ data }) => {
+        try {
+            const parsedData = JSON.parse(data);
+            console.log('Parsed data:', parsedData);
+            updateStockPrices(parsedData);
+        } catch (error) {
+            console.error('Error parsing data:', error);
+        }
+    };
+
+    eventSource.onerror = (error) => {
+        console.error('EventSource failed to connect or got interrupted:', error);
+    };
+
+    function updateStockPrices(data) {
+        data.forEach(d => updateStockPrice(d.symbol, d.price));
+    }
+
+    function updateStockPrice(symbol, price) {
+        const row = document.getElementById(symbol);
+        if (row) {
+            const priceElement = row.querySelector('.price');
+            if (priceElement) {
+                priceElement.innerText = `$${parseFloat(price).toFixed(2)}`;
+            }
+        }
+    }
+</script>
+
+<table id="stockTable">
+    <thead>
+    <tr>
+        <th>Stock Symbol</th>
+        <th>Company Name</th>
+        <th>Current Price</th>
+        <th>Change (%)</th>
+        <th>Volume</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr id="AAPL">
+        <td>AAPL</td>
+        <td>Apple Inc.</td>
+        <td class="price">$150.00</td>
+        <td>0.50%</td>
+        <td>1,000,000</td>
+    </tr>
+    <tr id="GOOGL">
+        <td>GOOGL</td>
+        <td>Alphabet Inc.</td>
+        <td class="price">$2800.00</td>
+        <td>-1.20%</td>
+        <td>500,000</td>
+    </tr>
+    <tr id="AMZN">
+        <td>AMZN</td>
+        <td>Amazon.com Inc.</td>
+        <td class="price">$3400.00</td>
+        <td>1.75%</td>
+        <td>800,000</td>
+    </tr>
+    <tr id="MSFT">
+        <td>MSFT</td>
+        <td>Microsoft Corporation</td>
+        <td class="price">$299.00</td>
+        <td>0.80%</td>
+        <td>600,000</td>
+    </tr>
+    <tr id="TSLA">
+        <td>TSLA</td>
+        <td>Tesla Inc.</td>
+        <td class="price">$700.00</td>
+        <td>2.10%</td>
+        <td>1,200,000</td>
+    </tr>
+    </tbody>
+</table>

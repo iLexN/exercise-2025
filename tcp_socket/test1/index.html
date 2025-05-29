@@ -1,0 +1,66 @@
+<script>
+  const socket = new WebSocket("ws://127.0.0.1:3001");
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    console.log(data);
+    updateStockPrice(data.symbol, data.price);
+  };
+
+  function updateStockPrice(symbol, price) {
+    const row = document.getElementById(symbol);
+    if (row) {
+      row.querySelector('.price').innerText = price;
+    }
+  }
+</script>
+
+
+<table id="stockTable">
+  <thead>
+  <tr>
+    <th>Stock Symbol</th>
+    <th>Company Name</th>
+    <th>Current Price</th>
+    <th>Change (%)</th>
+    <th>Volume</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr id="AAPL">
+    <td>AAPL</td>
+    <td>Apple Inc.</td>
+    <td class="price">$150.00</td>
+    <td>0.50%</td>
+    <td>1,000,000</td>
+  </tr>
+  <tr id="GOOGL">
+    <td>GOOGL</td>
+    <td>Alphabet Inc.</td>
+    <td class="price">$2800.00</td>
+    <td>-1.20%</td>
+    <td>500,000</td>
+  </tr>
+  <tr id="AMZN">
+    <td>AMZN</td>
+    <td>Amazon.com Inc.</td>
+    <td class="price">$3400.00</td>
+    <td>1.75%</td>
+    <td>800,000</td>
+  </tr>
+  <tr id="MSFT">
+    <td>MSFT</td>
+    <td>Microsoft Corporation</td>
+    <td class="price">$299.00</td>
+    <td>0.80%</td>
+    <td>600,000</td>
+  </tr>
+  <tr id="TSLA">
+    <td>TSLA</td>
+    <td>Tesla Inc.</td>
+    <td class="price">$700.00</td>
+    <td>2.10%</td>
+    <td>1,200,000</td>
+  </tr>
+  </tbody>
+</table>
