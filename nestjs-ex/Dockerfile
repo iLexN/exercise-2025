@@ -1,5 +1,5 @@
 # Use the official Node.js image as the base image
-FROM node:23
+FROM node:24
 
 RUN useradd -m appuser
 USER appuser
