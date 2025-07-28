@@ -1,0 +1,13 @@
+/vendor/
+/composer.lock
+/.phpunit.result.cache
+/.phpunit.cache/
+/.idea/
+/.vscode/
+/coverage/
+/.php_cs.cache 
+.doc
+.todolist
+.log
+runtime
+examples/local*
